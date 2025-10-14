@@ -56,44 +56,62 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// For SPA routing, serve index.html for all non-API routes
-// This should come after static file serving but BEFORE the 404 handler
-app.get('/', (req, res) => {
-  console.log('Root route hit');
-  console.log('Frontend dist path:', frontendDistPath);
-  console.log('Frontend dist exists:', fs.existsSync(frontendDistPath));
+// Serve frontend static files with correct path
+const frontendDistPath = path.join(__dirname, '../frontend/dist');
+console.log('Frontend dist path:', frontendDistPath);
+
+// Check if frontend dist directory exists
+const fs = require('fs');
+if (fs.existsSync(frontendDistPath)) {
+  console.log('Frontend dist directory exists');
+  const files = fs.readdirSync(frontendDistPath);
+  console.log('Frontend dist directory contents (first 10):', files.slice(0, 10));
   
-  if (fs.existsSync(frontendDistPath)) {
-    const indexPath = path.join(frontendDistPath, 'index.html');
-    console.log('Index path:', indexPath);
-    console.log('Index file exists:', fs.existsSync(indexPath));
-    
-    if (fs.existsSync(indexPath)) {
-      console.log('Serving index.html for root route');
-      res.sendFile(indexPath, (err) => {
-        if (err) {
-          console.error('Error sending index.html:', err);
-          res.status(500).json({ 
-            message: 'Failed to serve frontend', 
-            error: err.message,
-            timestamp: new Date().toISOString()
-          });
-        }
-      });
-    } else {
-      console.log('index.html NOT found for root route');
-      res.status(404).send('Frontend files found but index.html is missing');
-    }
+  // Check if index.html exists specifically
+  const indexPath = path.join(frontendDistPath, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    console.log('index.html found at:', indexPath);
   } else {
-    console.log('Frontend dist directory not found');
-    // Fallback API response
+    console.log('index.html NOT found at:', indexPath);
+  }
+  
+  // Serve static files with explicit configuration for SPA
+  // Serve the root path specifically
+  app.get('/', (req, res) => {
+    console.log('Serving index.html from root route');
+    res.sendFile(indexPath, (err) => {
+      if (err) {
+        console.error('Error sending index.html:', err);
+        res.status(500).json({ 
+          message: 'Failed to serve frontend', 
+          error: err.message,
+          timestamp: new Date().toISOString()
+        });
+      }
+    });
+  });
+  
+  // Serve other static files
+  app.use(express.static(frontendDistPath, {
+    maxAge: '1h',
+    etag: false
+  }));
+  
+  console.log('Serving static files from:', frontendDistPath);
+} else {
+  console.log('WARNING: Frontend dist directory does not exist at:', frontendDistPath);
+  console.log('Current directory:', __dirname);
+  console.log('Parent directory contents:', fs.readdirSync(path.join(__dirname, '..')));
+  
+  // Fallback for when frontend is not built
+  app.get('/', (req, res) => {
     res.json({ 
       message: 'Frontend not built yet. API is working correctly.',
       api_docs: '/api/health',
       timestamp: new Date().toISOString()
     });
-  }
-});
+  });
+}
 
 // Add a route to test if static files are accessible
 app.get('/test-frontend', (req, res) => {
