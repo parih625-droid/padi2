@@ -15,9 +15,23 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// Security middleware
+// Security middleware with relaxed CSP for frontend compatibility
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'", "'unsafe-inline'", "data:", "http:", "https:"],
+      styleSrc: ["'self'", "'unsafe-inline'", "data:", "http:", "https:"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "data:", "http:", "https:"],
+      imgSrc: ["'self'", "data:", "http:", "https:"],
+      fontSrc: ["'self'", "https:", "data:", "http:"],
+      connectSrc: ["'self'", "http:", "https:"],
+      mediaSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      childSrc: ["'self'"],
+      frameSrc: ["'self'"],
+    },
+  },
 }));
 
 // CORS configuration
