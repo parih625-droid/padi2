@@ -60,20 +60,60 @@ app.get('/api/health', (req, res) => {
 // This should come after static file serving but BEFORE the 404 handler
 app.get('/', (req, res) => {
   console.log('Root route hit');
+  console.log('Frontend dist path:', frontendDistPath);
+  console.log('Frontend dist exists:', fs.existsSync(frontendDistPath));
+  
   if (fs.existsSync(frontendDistPath)) {
     const indexPath = path.join(frontendDistPath, 'index.html');
+    console.log('Index path:', indexPath);
+    console.log('Index file exists:', fs.existsSync(indexPath));
+    
     if (fs.existsSync(indexPath)) {
       console.log('Serving index.html for root route');
-      res.sendFile(indexPath);
+      res.sendFile(indexPath, (err) => {
+        if (err) {
+          console.error('Error sending index.html:', err);
+          res.status(500).json({ 
+            message: 'Failed to serve frontend', 
+            error: err.message,
+            timestamp: new Date().toISOString()
+          });
+        }
+      });
     } else {
       console.log('index.html NOT found for root route');
       res.status(404).send('Frontend files found but index.html is missing');
     }
   } else {
+    console.log('Frontend dist directory not found');
     // Fallback API response
     res.json({ 
       message: 'Frontend not built yet. API is working correctly.',
       api_docs: '/api/health',
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Add a route to test if static files are accessible
+app.get('/test-frontend', (req, res) => {
+  console.log('Test frontend route hit');
+  console.log('Frontend dist path:', frontendDistPath);
+  console.log('Frontend dist exists:', fs.existsSync(frontendDistPath));
+  
+  if (fs.existsSync(frontendDistPath)) {
+    const files = fs.readdirSync(frontendDistPath);
+    console.log('Frontend files:', files);
+    res.json({ 
+      message: 'Frontend directory accessible',
+      files: files,
+      path: frontendDistPath,
+      timestamp: new Date().toISOString()
+    });
+  } else {
+    res.status(404).json({ 
+      message: 'Frontend directory not found',
+      path: frontendDistPath,
       timestamp: new Date().toISOString()
     });
   }
