@@ -142,7 +142,8 @@ app.use('/api/orders', require('./routes/orders'));
 app.use('/api/cart', require('./routes/cart'));
 
 // For SPA routing, serve index.html for all non-API routes
-app.get(/^(?!\/api).+/, (req, res) => {
+// This should come after static file serving but before the root route
+app.get(/^(?!\/api|\/uploads).*/, (req, res) => {
   if (fs.existsSync(frontendDistPath)) {
     const indexPath = path.join(frontendDistPath, 'index.html');
     if (fs.existsSync(indexPath)) {
@@ -252,28 +253,6 @@ app.get('/api/test-db', async (req, res) => {
       timestamp: new Date().toISOString()
     });
   }
-});
-
-// Serve a simple frontend page
-app.get('/', (req, res) => {
-  res.send(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>E-commerce API</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-        <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
-            <h1>E-commerce Backend API</h1>
-            <p>Your backend API is running successfully!</p>
-            <p><a href="/api/health">Health Check</a> | <a href="/api/test-db">Database Test</a></p>
-            <p>Make sure to set up your database connection in Render environment variables.</p>
-        </div>
-    </body>
-    </html>
-  `);
 });
 
 // Test endpoint for orders (outside of /api/orders to avoid middleware)
