@@ -56,9 +56,27 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// SPA fallback
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+// For SPA routing, serve index.html for all non-API routes
+// This should come after static file serving
+app.get(/^(?!\/(api|uploads|assets)).*$/, (req, res) => {
+  console.log('SPA route hit for:', req.url);
+  if (fs.existsSync(frontendDistPath)) {
+    const indexPath = path.join(frontendDistPath, 'index.html');
+    if (fs.existsSync(indexPath)) {
+      console.log('Serving index.html for SPA route');
+      res.sendFile(indexPath);
+    } else {
+      console.log('index.html NOT found for SPA route');
+      res.status(404).send('Frontend files found but index.html is missing');
+    }
+  } else {
+    // Fallback API response
+    res.json({ 
+      message: 'Frontend not built yet. API is working correctly.',
+      api_docs: '/api/health',
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 // Start HTTP server
