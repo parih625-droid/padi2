@@ -106,7 +106,7 @@ app.use('/uploads', (req, res, next) => {
   next();
 }, express.static(path.join(__dirname, 'uploads')));
 
-// Serve frontend static files
+// Serve frontend static files with correct path
 const frontendDistPath = path.join(__dirname, '../frontend/dist');
 console.log('Frontend dist path:', frontendDistPath);
 
@@ -125,7 +125,9 @@ if (fs.existsSync(frontendDistPath)) {
     console.log('index.html NOT found at:', indexPath);
   }
   
+  // Serve static files
   app.use(express.static(frontendDistPath));
+  console.log('Serving static files from:', frontendDistPath);
 } else {
   console.log('WARNING: Frontend dist directory does not exist at:', frontendDistPath);
   console.log('Current directory:', __dirname);
@@ -142,12 +144,18 @@ app.use('/api/cart', require('./routes/cart'));
 // For SPA routing, serve index.html for all non-API routes
 app.get(/^(?!\/api).+/, (req, res) => {
   if (fs.existsSync(frontendDistPath)) {
-    res.sendFile(path.join(frontendDistPath, 'index.html'));
+    const indexPath = path.join(frontendDistPath, 'index.html');
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      res.status(404).send('Frontend files found but index.html is missing');
+    }
   } else {
     // Fallback API response
     res.json({ 
       message: 'Frontend not built yet. API is working correctly.',
-      api_docs: '/api/health'
+      api_docs: '/api/health',
+      timestamp: new Date().toISOString()
     });
   }
 });
