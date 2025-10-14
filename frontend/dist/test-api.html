@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Connection Test</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <div style="padding: 20px; font-family: Arial, sans-serif;">
+        <h1>API Connection Test</h1>
+        <button onclick="testConnection()">Test API Connection</button>
+        <div id="result" style="margin-top: 20px; padding: 10px; border-radius: 5px;"></div>
+        
+        <script>
+            async function testConnection() {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = 'Testing connection...';
+                resultDiv.style.backgroundColor = '#f0f0f0';
+                
+                try {
+                    // Get the API base URL from environment variables
+                    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+                    console.log('API URL:', apiUrl);
+                    
+                    const response = await fetch(`${apiUrl}/health`);
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        resultDiv.innerHTML = `
+                            <h3 style="color: green;">✅ Connection Successful!</h3>
+                            <p><strong>Status:</strong> ${data.status}</p>
+                            <p><strong>Message:</strong> ${data.message}</p>
+                            <p><strong>Database:</strong> ${data.database?.connectionStateDescription || 'Unknown'}</p>
+                        `;
+                        resultDiv.style.backgroundColor = '#d4edda';
+                    } else {
+                        throw new Error(`Server returned ${response.status}: ${data.message}`);
+                    }
+                } catch (error) {
+                    resultDiv.innerHTML = `
+                        <h3 style="color: red;">❌ Connection Failed!</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p>Please check:</p>
+                        <ul>
+                            <li>That the backend server is running</li>
+                            <li>That the API URL is correct in your .env file</li>
+                            <li>Your network connection</li>
+                        </ul>
+                    `;
+                    resultDiv.style.backgroundColor = '#f8d7da';
+                    console.error('Connection error:', error);
+                }
+            }
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,5 @@
+# Redirects for SPA routing
+/*    /index.html   200
+
+# API redirects (if needed)
+# /api/*  https://padidekhoy.onrender.com/api/:splat  200

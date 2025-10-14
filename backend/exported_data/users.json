@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "68e8bdfea1fbfb5d232f94c4",
+    "name": "Admin User",
+    "email": "admin@padidekhoy.ir",
+    "role": "admin",
+    "__v": 0,
+    "createdAt": "2025-10-10T08:04:14.579Z",
+    "updatedAt": "2025-10-10T08:04:14.579Z"
+  },
+  {
+    "_id": "68e8bdfea1fbfb5d232f94c5",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "role": "customer",
+    "__v": 0,
+    "createdAt": "2025-10-10T08:04:14.579Z",
+    "updatedAt": "2025-10-10T08:04:14.579Z"
+  }
+]

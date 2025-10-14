@@ -1,0 +1,32 @@
+# MongoDB User Setup Instructions for E-commerce Application
+
+## Steps to create the required MongoDB user:
+
+1. Connect to MongoDB shell:
+   mongo
+
+2. Switch to the ecommerce_db database:
+   use ecommerce_db
+
+3. Create the user with the following command:
+   db.createUser({
+     user: "padidekhoy",
+     pwd: "Re1317821Za",
+     roles: [
+       { role: "readWrite", db: "ecommerce_db" },
+       { role: "dbAdmin", db: "ecommerce_db" }
+     ]
+   })
+
+4. Exit MongoDB shell:
+   exit
+
+5. Restart your backend server to test the connection:
+   - Stop the current server (Ctrl+C)
+   - Start it again with: npm run start
+
+## Verification:
+After creating the user, you can test the connection by visiting:
+http://87.107.12.71:5000/api/health
+
+The health check should now return a successful response instead of "Something went wrong!".

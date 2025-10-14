@@ -1,0 +1,177 @@
+[
+  {
+    "_id": "68e8bdfda1fbfb5d232f94b9",
+    "name": "Smartphone",
+    "description": "Latest model smartphone with advanced features",
+    "price": 699.99,
+    "images": [
+      "/uploads/smartphone.jpg"
+    ],
+    "category": {
+      "_id": "68e8bdfda1fbfb5d232f94b1",
+      "name": "لبنیات",
+      "description": "شیر، پنیر، کره، ماست، خامه، کشک، بستنی، مربا، عسل، شکلات صبحانه، کرهٔ بادام‌زمینی، کورن فلکس، حلواشکری",
+      "__v": 0,
+      "createdAt": "2025-10-10T08:04:13.584Z",
+      "updatedAt": "2025-10-10T08:10:38.166Z",
+      "image": "/uploads/image-1760083837889-76922609.jpg"
+    },
+    "stockQuantity": 50,
+    "isActive": true,
+    "salesCount": 10,
+    "isAmazingOffer": false,
+    "__v": 0,
+    "createdAt": "2025-10-10T08:04:13.876Z",
+    "updatedAt": "2025-10-10T08:04:13.876Z"
+  },
+  {
+    "_id": "68e8bdfda1fbfb5d232f94ba",
+    "name": "Laptop",
+    "description": "High-performance laptop for work and gaming",
+    "price": 1299.99,
+    "images": [
+      "/uploads/laptop.jpg"
+    ],
+    "category": {
+      "_id": "68e8bdfda1fbfb5d232f94b2",
+      "name": "حبوبات",
+      "description": "برنج، حبوبات، ماکارونی و پاستا و لازانیا و نودل، قند و شکر و نبات و خرما، آرد ، پودر، رشته و خمیر، انواع نان، روغن",
+      "__v": 0,
+      "createdAt": "2025-10-10T08:04:13.585Z",
+      "updatedAt": "2025-10-10T08:09:03.575Z",
+      "image": "/uploads/image-1760083743314-614029855.jpg"
+    },
+    "stockQuantity": 30,
+    "isActive": true,
+    "salesCount": 5,
+    "isAmazingOffer": true,
+    "__v": 0,
+    "createdAt": "2025-10-10T08:04:13.876Z",
+    "updatedAt": "2025-10-10T08:04:13.876Z"
+  },
+  {
+    "_id": "68e8bdfda1fbfb5d232f94bb",
+    "name": "T-Shirt",
+    "description": "Comfortable cotton t-shirt",
+    "price": 19.99,
+    "images": [
+      "/uploads/tshirt.jpg"
+    ],
+    "category": {
+      "_id": "68e8bdfda1fbfb5d232f94b3",
+      "name": "مواد پروتئینی",
+      "description": "تخم مرغ، قارچ، جوانه، گوشت، مرغ، ماهی، میگو، خاویار، سوسیس، کالباس، همبرگر، ناگت و سایر فرآورده‌های گوشت و مرغ",
+      "__v": 0,
+      "createdAt": "2025-10-10T08:04:13.585Z",
+      "updatedAt": "2025-10-10T08:08:05.212Z",
+      "image": "/uploads/image-1760083684932-74304918.jpg"
+    },
+    "stockQuantity": 100,
+    "isActive": true,
+    "salesCount": 25,
+    "isAmazingOffer": false,
+    "__v": 0,
+    "createdAt": "2025-10-10T08:04:13.876Z",
+    "updatedAt": "2025-10-10T08:04:13.876Z"
+  },
+  {
+    "_id": "68e8bdfda1fbfb5d232f94bc",
+    "name": "Jeans",
+    "description": "Classic blue jeans",
+    "price": 49.99,
+    "images": [
+      "/uploads/jeans.jpg"
+    ],
+    "category": {
+      "_id": "68e8bdfda1fbfb5d232f94b4",
+      "name": "نوشیدنی‌ها",
+      "description": "آب معدنی، آبمیوه، شربت، چای، دمنوش، قهوه، عرقیجات، نوشابه، دوغ، ماءالشعیر، انرژی‌زا",
+      "__v": 0,
+      "createdAt": "2025-10-10T08:04:13.585Z",
+      "updatedAt": "2025-10-10T08:13:26.929Z",
+      "image": "/uploads/image-1760084006650-499430082.jpg"
+    },
+    "stockQuantity": 75,
+    "isActive": true,
+    "salesCount": 15,
+    "isAmazingOffer": false,
+    "__v": 0,
+    "createdAt": "2025-10-10T08:04:13.876Z",
+    "updatedAt": "2025-10-10T08:04:13.876Z"
+  },
+  {
+    "_id": "68e8bdfda1fbfb5d232f94bd",
+    "name": "Programming Book",
+    "description": "Learn web development with this comprehensive guide",
+    "price": 39.99,
+    "images": [
+      "/uploads/book.jpg"
+    ],
+    "category": {
+      "_id": "68e8bdfda1fbfb5d232f94b5",
+      "name": "کنسرو و غذای آماده",
+      "description": "سالاد، کلاب و ساندویچ، سوپ وآش، انواع ترشی، انواع شور، انواع کمپوت، زیتون، انواع کنسرو سبزیجات، ماهی و …",
+      "__v": 0,
+      "createdAt": "2025-10-10T08:04:13.585Z",
+      "updatedAt": "2025-10-10T08:14:06.512Z",
+      "image": "/uploads/image-1760084046235-723164621.jpg"
+    },
+    "stockQuantity": 25,
+    "isActive": true,
+    "salesCount": 8,
+    "isAmazingOffer": false,
+    "__v": 0,
+    "createdAt": "2025-10-10T08:04:13.876Z",
+    "updatedAt": "2025-10-10T08:04:13.876Z"
+  },
+  {
+    "_id": "68e8bdfda1fbfb5d232f94be",
+    "name": "Garden Tools Set",
+    "description": "Complete set of garden tools",
+    "price": 89.99,
+    "images": [
+      "/uploads/garden-tools.jpg"
+    ],
+    "category": {
+      "_id": "68e8bdfda1fbfb5d232f94b1",
+      "name": "لبنیات",
+      "description": "شیر، پنیر، کره، ماست، خامه، کشک، بستنی، مربا، عسل، شکلات صبحانه، کرهٔ بادام‌زمینی، کورن فلکس، حلواشکری",
+      "__v": 0,
+      "createdAt": "2025-10-10T08:04:13.584Z",
+      "updatedAt": "2025-10-10T08:10:38.166Z",
+      "image": "/uploads/image-1760083837889-76922609.jpg"
+    },
+    "stockQuantity": 40,
+    "isActive": true,
+    "salesCount": 3,
+    "isAmazingOffer": true,
+    "__v": 0,
+    "createdAt": "2025-10-10T08:04:13.876Z",
+    "updatedAt": "2025-10-10T08:04:13.876Z"
+  },
+  {
+    "_id": "68e8bdfda1fbfb5d232f94bf",
+    "name": "Running Shoes",
+    "description": "Professional running shoes for athletes",
+    "price": 129.99,
+    "images": [
+      "/uploads/running-shoes.jpg"
+    ],
+    "category": {
+      "_id": "68e8bdfda1fbfb5d232f94b2",
+      "name": "حبوبات",
+      "description": "برنج، حبوبات، ماکارونی و پاستا و لازانیا و نودل، قند و شکر و نبات و خرما، آرد ، پودر، رشته و خمیر، انواع نان، روغن",
+      "__v": 0,
+      "createdAt": "2025-10-10T08:04:13.585Z",
+      "updatedAt": "2025-10-10T08:09:03.575Z",
+      "image": "/uploads/image-1760083743314-614029855.jpg"
+    },
+    "stockQuantity": 60,
+    "isActive": true,
+    "salesCount": 12,
+    "isAmazingOffer": false,
+    "__v": 0,
+    "createdAt": "2025-10-10T08:04:13.876Z",
+    "updatedAt": "2025-10-10T08:04:13.876Z"
+  }
+]
