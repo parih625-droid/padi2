@@ -78,15 +78,36 @@ if (fs.existsSync(frontendDistPath)) {
   // Serve static files with explicit configuration for SPA
   // Serve the root path specifically
   app.get('/', (req, res) => {
-    console.log('Serving index.html from root route');
+    console.log('Root route hit - serving index.html');
+    console.log('Index path:', indexPath);
+    console.log('Index file exists:', fs.existsSync(indexPath));
+    
+    // Check if file is readable
+    try {
+      fs.accessSync(indexPath, fs.constants.R_OK);
+      console.log('Index file is readable');
+    } catch (accessErr) {
+      console.error('Index file is NOT readable:', accessErr.message);
+      return res.status(500).json({ 
+        message: 'Index file not readable', 
+        error: accessErr.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+    
     res.sendFile(indexPath, (err) => {
       if (err) {
         console.error('Error sending index.html:', err);
+        console.error('Error code:', err.code);
+        console.error('Error path:', err.path);
         res.status(500).json({ 
           message: 'Failed to serve frontend', 
           error: err.message,
+          code: err.code,
           timestamp: new Date().toISOString()
         });
+      } else {
+        console.log('Index.html served successfully');
       }
     });
   });
