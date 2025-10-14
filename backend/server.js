@@ -239,8 +239,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Use Render's PORT or default to 5000
-const PORT = process.env.PORT || 5000;
+// Use port 80 for direct access or PORT environment variable
+const PORT = process.env.PORT || 80;
 
 // Start HTTP server
 app.listen(PORT, '0.0.0.0', () => {
