@@ -92,48 +92,44 @@ if (fs.existsSync(frontendDistPath)) {
     console.log('index.html NOT found at:', indexPath);
   }
   
-  // Serve static files with explicit configuration for SPA
-  // Serve the root path specifically
-  app.get('/', (req, res) => {
-    console.log('Root route hit - serving index.html');
-    console.log('Index path:', indexPath);
-    console.log('Index file exists:', fs.existsSync(indexPath));
-    
-    // Check if file is readable
-    try {
-      fs.accessSync(indexPath, fs.constants.R_OK);
-      console.log('Index file is readable');
-    } catch (accessErr) {
-      console.error('Index file is NOT readable:', accessErr.message);
-      return res.status(500).json({ 
-        message: 'Index file not readable', 
-        error: accessErr.message,
-        timestamp: new Date().toISOString()
-      });
-    }
-    
-    res.sendFile(indexPath, (err) => {
-      if (err) {
-        console.error('Error sending index.html:', err);
-        console.error('Error code:', err.code);
-        console.error('Error path:', err.path);
-        res.status(500).json({ 
-          message: 'Failed to serve frontend', 
-          error: err.message,
-          code: err.code,
-          timestamp: new Date().toISOString()
-        });
-      } else {
-        console.log('Index.html served successfully');
-      }
-    });
-  });
-  
-  // Serve other static files
+  // Serve static files
   app.use(express.static(frontendDistPath, {
     maxAge: '1h',
     etag: false
   }));
+  
+  // SPA routing - serve index.html for common frontend routes
+  const frontendRoutes = ['/products', '/categories', '/cart', '/checkout', '/profile', '/login', '/register'];
+  frontendRoutes.forEach(route => {
+    app.get(route, (req, res) => {
+      console.log('SPA route hit for:', req.url);
+      res.sendFile(indexPath, (err) => {
+        if (err) {
+          console.error('Error sending index.html:', err);
+          res.status(500).json({ 
+            message: 'Failed to serve frontend', 
+            error: err.message,
+            timestamp: new Date().toISOString()
+          });
+        }
+      });
+    });
+  });
+  
+  // Serve root route separately
+  app.get('/', (req, res) => {
+    console.log('Root route hit');
+    res.sendFile(indexPath, (err) => {
+      if (err) {
+        console.error('Error sending index.html:', err);
+        res.status(500).json({ 
+          message: 'Failed to serve frontend', 
+          error: err.message,
+          timestamp: new Date().toISOString()
+        });
+      }
+    });
+  });
   
   console.log('Serving static files from:', frontendDistPath);
 } else {
@@ -175,7 +171,7 @@ app.get('/test-frontend', (req, res) => {
   }
 });
 
-// Add a 404 handler for unmatched routes (should come after all other routes)
+// Add a 404 handler for unmatched routes (should come after all other routes but before error handler)
 app.use((req, res, next) => {
   console.log('404 handler hit for:', req.url);
   res.status(404).json({
