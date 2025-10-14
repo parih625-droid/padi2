@@ -15,35 +15,38 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// Security middleware with relaxed CSP for frontend compatibility
+// Security middleware with completely disabled CSP for development
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" },
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'", "'unsafe-inline'", "data:", "http:", "https:"],
-      styleSrc: ["'self'", "'unsafe-inline'", "data:", "http:", "https:"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "data:", "http:", "https:"],
-      imgSrc: ["'self'", "data:", "http:", "https:"],
-      fontSrc: ["'self'", "https:", "data:", "http:"],
-      connectSrc: ["'self'", "http:", "https:"],
-      mediaSrc: ["'self'"],
-      objectSrc: ["'none'"],
-      childSrc: ["'self'"],
-      frameSrc: ["'self'"],
-    },
-  },
+  contentSecurityPolicy: false, // Completely disable CSP for development
 }));
 
-// CORS configuration
+// CORS configuration - Allow local access
 app.use(cors({
   origin: [
     'http://87.107.12.71:5000',
     'http://localhost:5173',
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'http://87.107.12.71'
   ],
   credentials: true,
   optionsSuccessStatus: 200
 }));
+
+// Add explicit CORS headers for all routes
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Max-Age', '86400'); // 24 hours
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
