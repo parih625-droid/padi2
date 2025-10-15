@@ -73,6 +73,24 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// API root endpoint - provide API information
+app.get('/api/', (req, res) => {
+  res.json({ 
+    message: 'E-commerce API is running',
+    version: '1.0.0',
+    endpoints: {
+      products: '/api/products',
+      categories: '/api/categories',
+      auth: '/api/auth',
+      orders: '/api/orders',
+      cart: '/api/cart',
+      health: '/api/health'
+    },
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 // Serve frontend static files with correct path
 const frontendDistPath = path.join(__dirname, '../frontend/dist');
 console.log('Frontend dist path:', frontendDistPath);
