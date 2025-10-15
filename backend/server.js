@@ -21,13 +21,14 @@ app.use(helmet({
   contentSecurityPolicy: false, // Completely disable CSP for development
 }));
 
-// CORS configuration - Allow local access
-app.use(cors({
+// Enhanced CORS configuration - Allow all origins for API routes
+app.use('/api', cors({
   origin: [
     'http://87.107.12.71:5000',
+    'http://87.107.12.71',
     'http://localhost:5173',
     'http://localhost:3000',
-    'http://87.107.12.71'
+    'http://localhost:5000'
   ],
   credentials: true,
   optionsSuccessStatus: 200
@@ -38,10 +39,14 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Max-Age', '86400'); // 24 hours
   
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     res.sendStatus(200);
   } else {
     next();
