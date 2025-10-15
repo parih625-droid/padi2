@@ -98,27 +98,10 @@ if (fs.existsSync(frontendDistPath)) {
     etag: false
   }));
   
-  // SPA routing - serve index.html for common frontend routes
-  const frontendRoutes = ['/products', '/categories', '/cart', '/checkout', '/profile', '/login', '/register'];
-  frontendRoutes.forEach(route => {
-    app.get(route, (req, res) => {
-      console.log('SPA route hit for:', req.url);
-      res.sendFile(indexPath, (err) => {
-        if (err) {
-          console.error('Error sending index.html:', err);
-          res.status(500).json({ 
-            message: 'Failed to serve frontend', 
-            error: err.message,
-            timestamp: new Date().toISOString()
-          });
-        }
-      });
-    });
-  });
-  
-  // Serve root route separately
-  app.get('/', (req, res) => {
-    console.log('Root route hit');
+  // SPA routing - serve index.html for all non-API routes
+  // This handles all frontend routes including /admin, /products, /cart, etc.
+  app.get(/^(?!\/(api|uploads|assets)).*$/, (req, res) => {
+    console.log('SPA route hit for:', req.url);
     res.sendFile(indexPath, (err) => {
       if (err) {
         console.error('Error sending index.html:', err);
@@ -147,6 +130,17 @@ if (fs.existsSync(frontendDistPath)) {
   });
 }
 
+// Add a 404 handler for unmatched API routes (should come after all other routes but before error handler)
+app.use((req, res, next) => {
+  console.log('404 handler hit for:', req.url);
+  res.status(404).json({
+    message: 'Route not found',
+    url: req.url,
+    method: req.method,
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Add a route to test if static files are accessible
 app.get('/test-frontend', (req, res) => {
   console.log('Test frontend route hit');
@@ -169,17 +163,6 @@ app.get('/test-frontend', (req, res) => {
       timestamp: new Date().toISOString()
     });
   }
-});
-
-// Add a 404 handler for unmatched routes (should come after all other routes but before error handler)
-app.use((req, res, next) => {
-  console.log('404 handler hit for:', req.url);
-  res.status(404).json({
-    message: 'Route not found',
-    url: req.url,
-    method: req.method,
-    timestamp: new Date().toISOString()
-  });
 });
 
 // Error handling middleware - CORS-friendly version
@@ -239,8 +222,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Use port 80 for direct access or PORT environment variable
-const PORT = process.env.PORT || 80;
+// Use port 5000 for testing
+const PORT = process.env.PORT || 5000;
 
 // Start HTTP server
 app.listen(PORT, '0.0.0.0', () => {
