@@ -125,18 +125,27 @@ const users = [
   }
 ];
 
-// Seed function
+// Seed function - SAFE VERSION (doesn't clear existing data)
 const seedData = async () => {
   try {
     // Connect to database
     await connectDB();
 
-    // Clear existing data
-    await Category.deleteMany();
-    await Product.deleteMany();
-    await User.deleteMany();
+    // Check if data already exists
+    const existingCategories = await Category.countDocuments();
+    const existingProducts = await Product.countDocuments();
+    const existingUsers = await User.countDocuments();
     
-    console.log('✅ Existing data cleared');
+    if (existingCategories > 0 || existingProducts > 0 || existingUsers > 0) {
+      console.log('⚠️ Database already contains data. Skipping seeding to prevent data loss.');
+      console.log(`   Categories: ${existingCategories}`);
+      console.log(`   Products: ${existingProducts}`);
+      console.log(`   Users: ${existingUsers}`);
+      console.log('💡 To re-seed the database, run: npm run seed -- --force');
+      process.exit(0);
+    }
+
+    console.log('✅ Database is empty. Proceeding with seeding...');
 
     // Insert categories
     const createdCategories = await Category.insertMany(categories);
@@ -180,5 +189,67 @@ const seedData = async () => {
   }
 };
 
-// Run the seed function
-seedData();
+// Force seed function - clears existing data and inserts fresh data
+const forceSeedData = async () => {
+  try {
+    // Connect to database
+    await connectDB();
+
+    console.log('⚠️ FORCE SEEDING - Clearing all existing data...');
+    
+    // Clear existing data
+    await Category.deleteMany();
+    await Product.deleteMany();
+    await User.deleteMany();
+    
+    console.log('✅ Existing data cleared');
+
+    // Insert categories
+    const createdCategories = await Category.insertMany(categories);
+    console.log(`✅ ${createdCategories.length} categories inserted`);
+
+    // Insert products
+    const productsWithCategory = products.map((product, index) => {
+      // Assign categories in a round-robin fashion
+      const categoryIndex = index % createdCategories.length;
+      return {
+        ...product,
+        category: createdCategories[categoryIndex]._id
+      };
+    });
+    
+    const createdProducts = await Product.insertMany(productsWithCategory);
+    console.log(`✅ ${createdProducts.length} products inserted`);
+
+    // Insert users with hashed passwords
+    const usersWithHashedPasswords = await Promise.all(
+      users.map(async (user) => {
+        const hashedPassword = await bcrypt.hash(user.password, 12);
+        return {
+          ...user,
+          password: hashedPassword
+        };
+      })
+    );
+    
+    const createdUsers = await User.insertMany(usersWithHashedPasswords);
+    console.log(`✅ ${createdUsers.length} users inserted`);
+
+    console.log('\n🎉 Database force seeding completed successfully!');
+    console.log('\n👤 Admin login: admin@padidekhoy.ir / Re1317821Za');
+    console.log('👤 Customer login: john@example.com / password123');
+    
+    process.exit(0);
+  } catch (error) {
+    console.error('❌ Error force seeding database:', error.message);
+    process.exit(1);
+  }
+};
+
+// Check if force flag is passed
+const forceFlagIndex = process.argv.indexOf('--force');
+if (forceFlagIndex !== -1) {
+  forceSeedData();
+} else {
+  seedData();
+}
